@@ -1,10 +1,10 @@
 const inquirer = require('inquirer');
-const db = require('./db/db');
+const db = require('./db/dbQueries');
 const { getAllDepartments } = require('./db/dbQueries');
 
 
 // Initial Prompt
-const initialQuestion = [
+const initialQuestions = [
     {
     
         type: 'list',
@@ -24,7 +24,7 @@ const initialQuestion = [
 const viewQuestions = [
         {
             type:'list',
-            name: 'View Data',
+            name: 'options',
             message: 'What would you like to view?',
             choices: [ 
               'View all departments',
@@ -40,7 +40,7 @@ const viewQuestions = [
 const addQuestions = [
           {
             type: 'list',
-            name: 'Add Data',
+            name: 'options',
             Message: 'What would you like to add?',
             choices: [
               'Add department', 
@@ -53,7 +53,7 @@ const addQuestions = [
 const updateQuestions = [
           {
             type: 'list',
-            name: 'Update Data',
+            name: 'options',
             message: 'What would you like to update?',
             choices: [
               'Update an employee role',
@@ -65,7 +65,7 @@ const updateQuestions = [
 const deleteQuestions =[
         {
           type: 'list',
-          name: 'Delete Data',
+          name: 'options',
           message: 'What would you like to delete?',
           choices: [
               'Delete a department',
@@ -123,19 +123,19 @@ const init = () => {
         .prompt(initialQuestions)
         .then((answers) => { 
             switch(answers.options) {
-            case "View Data":
+            case "View data":
                 viewData();
                 break;
             
-            case "Add Data":
+            case "Add data":
                 addData();
                 break;
             
-            case "Update Data":
+            case "Update data":
                 updateData();
                 break;
             
-            case "Delete Data":
+            case "Delete data":
                 deleteData();
                 break;
             
@@ -155,47 +155,47 @@ const init = () => {
         })
 }
 
-const viewData = async () => {
+const viewData = () => {
   inquirer
-  .prompt(viewQuestions)
-  .then((answers) => { 
-      let results
-      switch(answers.options){
-          case "View all departments":
-            results = await db.getAllDepartments();
-            break;
-          case 'View all employees':
-            results = await db.getAllEmployees();
-            break;
-          case  'View all roles':
-            results = await db.getAllRoles();
-            break;
-          case 'View employees by manager':
-            results = await db.getEmployeesByManager();
-            break;
-          case 'View employees by department':
-            results = await db.getEmployeesByDepartment();
-            break;
-          case 'View department budgets':
-            results = await db.getDepartmentBudget();
-            break;
-      }
-      //console log the results in a pretty format
-      console.table(results);
-      init();
-   })       
-   .catch((error) => {
-        if (error.isTtyError) {
-            // Prompt couldn't be rendered in the current environment
-        } else {
-            // Something else went wrong
-            console.log("Sorry something went wrong :( ")
-            console.log(error)
+    .prompt(viewQuestions)
+    .then(async (answers) => { 
+        let results 
+        switch(answers.options){
+            case "View all departments":
+                results = await db.getAllDepartments();
+                break;
+            case 'View all employees':
+                results =  db.getAllEmployees();
+                break;
+            case  'View all roles':
+                results =  db.getAllRoles();
+                break;
+            case 'View employees by manager':
+                results =  db.getEmployeesByManager();
+                break;
+            case 'View employees by department':
+                results =  db.getEmployeesByDepartment();
+                break;
+            case 'View department budgets':
+                results =  db.getDepartmentBudget();
+                break;
         }
-    })    
+        //console log the results in a pretty format
+        console.table(results);
+        init();
+    })       
+    .catch((error) => {
+            if (error.isTtyError) {
+                // Prompt couldn't be rendered in the current environment
+            } else {
+                // Something else went wrong
+                console.log("Sorry something went wrong :( ")
+                console.log(error)
+            }
+        })    
 }
 
-const addData =  async () => {
+const addData = () => {
   inquirer
   .prompt(addQuestions)
   .then((answers) => { 
@@ -209,15 +209,58 @@ const addData =  async () => {
                     message: 'What is the departments\'s name?'
                 }])
                 .then((answer) => {
-                    results = await db.createDepartments(answer.departmentName);
+                    results =  db.createDepartments(answer.departmentName);
                     console.log(`successfully created department ${results}`)
                 })
             break;
           case 'Add employee':
-            results = await db.createEmployee();
+              let firstName;
+              let lastName;
+              let role;
+              let manager;
+            inquirer
+                .prompt([{
+                    type: 'input',
+                    name: 'employeeName',
+                    message: 'What is the employee\'s first name?'
+                }])
+                .then(async (answer) => {
+                    firstName = answer.employeeName;
+                    inquirer
+                        .prompt([{
+                            type: 'input',
+                            name: 'employeeName',
+                            message: 'What is the employee\'s last name?'
+                        }])
+                        .then(async (answer) => {
+                            lastName = answer.employeeName;
+                            console.table(await db.getAllRoles());
+                            inquirer
+                                .prompt([{
+                                    type: 'input',
+                                    name: 'employeeRole',
+                                    message: 'What is the employee\'s role?'
+                                }])
+                                .then(async (answer) => {
+                                    role = answer.employeeRole;
+                                    console.table(await db.getAllManagers());
+                                    inquirer
+                                        .prompt([{
+                                            type: 'input',
+                                            name: 'employeeManager',
+                                            message: 'What is the employee\'s manager?'
+                                        }])
+                                        .then(async (answer) => {
+                                            manager = answer.employeeManager;
+                                            result = await db.createEmployee(firstName, lastName, role, manager);
+                                            console.log(`successfully created employee ${result}`)
+                                        })
+                                })
+                        })
+                })
             break;
           case  'Add role':
-            results = await db.createRole();
+            results =   db.createRole();
             break;
       }
       //console log the results in a pretty format
@@ -249,6 +292,16 @@ const createEmployee = () => {
 
 const createRole = () => {
 
+}
+
+
+
+
+
+const init2 = async () => { 
+    const results = await db.getAllDepartments();
+
+    console.log(results);
 }
 
 init();

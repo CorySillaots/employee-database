@@ -6,7 +6,7 @@ class dbQueries {
   }
   //Employee (get, add, update)
   getAllEmployees() {
-    return this.connection.query("SELECT * FROM employee");
+    return this.connection.query("SELECT * FROM employees");
   }
 
   createEmployee(first_name, last_name, role_id, department_id){
@@ -14,7 +14,7 @@ class dbQueries {
   } 
 
   updateEmployee(employee_id, manager_id){
-    return this.connection.query(`UPDATE employee WHERE 'employee_id' EQUALS ${employee_id}`)
+    return this.connection.query(`UPDATE employees WHERE 'employee_id' EQUALS ${employee_id}`)
   }
 
   getEmployeesByManager(manager_id){
@@ -36,7 +36,9 @@ class dbQueries {
   getAllDepartments() {
     return this.connection.query("SELECT * FROM department");
   }
-
+  getAllManagers(){
+    return this.connection.query("SELECT * FROM employees WHERE 'manager_id' IS NULL");
+  }
   getDepartmentBudget(department_id){
     return this.connection.query(`SELECT `)
   }
