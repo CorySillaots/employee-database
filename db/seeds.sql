@@ -8,4 +8,4 @@ VALUES
 
 INSERT into employees (first_name, last_name, role_id, manager_id)
 VALUES
-("Mike", "Smith", 1, NULL);
+("Mike", "Smith", 1, 1);

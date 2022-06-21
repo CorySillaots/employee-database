@@ -10,7 +10,7 @@ class dbQueries {
   }
 
   createEmployee(first_name, last_name, role_id, department_id){
-    return this.connection.query(`INSERT INTO employees 'first_name', 'last_name', 'role_id', 'department_id' VALUES  ${first_name}, ${last_name}, ${role_id}, ${department_id}`);
+    return this.connection.query(`INSERT INTO employees 'first_name', 'last_name', 'role_id', 'manager_id', 'department_id' VALUES  ${first_name}, ${last_name}, ${role_id}, ${manager_id}, ${department_id}`);
   } 
 
   updateEmployee(employee_id, manager_id){
