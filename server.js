@@ -279,19 +279,152 @@ const addData = () => {
 
 
 const updateData = () => {
-
+    inquirer
+    .prompt(updateData)
+    .then((answers) => {
+        let results
+        switch(answer.options){
+            case 'Update an employee':
+                inquirer
+                    .prompt([{
+                        type: 'input',
+                        name: 'employeeID',
+                        message: 'What is the new employee id?'
+                    }])
+                    .then((answer) => {
+                        results = db.updateEmployee(answer.employee_id);
+                        console.log(`successfully updated employee ${results}`)
+                    })
+                    break; 
+        }
+        console.table(results);
+    })
+    .catch((error) => {
+        if (error.isTtyError) {
+            // Prompt couldn't be rendered in the current environment
+        } else {
+            // Something else went wrong
+            console.log("Sorry something went wrong :( ")
+            console.log(error)
+        }
+    }) 
 }
 
 const deleteData = () => {
-
+    inquirer
+    .prompt(deleteData)
+    .then((answers) => {
+        let results
+        switch(answers.options){
+            case 'delete a department':
+                inquirer
+                    .prompt([{
+                        type: 'input',
+                        name: 'delete a department',
+                        message: 'which department would you like to delete?'
+                    }])
+                    .then((answer) => {
+                        results = db.deleteDepartment(answer.departmentName);
+                        console.log(`successfully deleted department ${results}`)
+                    })
+                    break;
+                case 'delete a role':
+                    inquirer
+                        .prompt([{
+                            type: 'input',
+                            name: 'delete a role',
+                            message: 'which role would you like to delete?'
+                        }])
+                        .then((answer) => {
+                            results = db.deleteRole(answer.role_id);
+                            console.log(`successfully deleted department ${results}`)
+                        })
+                        break;
+                    case 'delete an employee':
+                        inquirer
+                            .prompt([{
+                                type: 'input',
+                                name: 'delete an employee',
+                                message: 'which employee would you like to delete?'
+                            }])
+                            .then((answer) => {
+                                results = db.deleteEmployee(answer.employee_id);
+                                console.log(`successfully deleted department ${results}`)
+                            })
+                            break;
+        }
+        console.table(results);
+    })
+    .catch((error) => {
+        if (error.isTtyError) {
+            // Prompt couldn't be rendered in the current environment
+        } else {
+            // Something else went wrong
+            console.log("Sorry something went wrong :( ")
+            console.log(error)
+        }
+    }) 
 }
 
 const createEmployee = () => {
+    //is this not the same code as add employee?
 
 }
 
 const createRole = () => {
-
+    inquirer
+    .prompt(addQuestions)
+    .then((answers) => {
+        let results 
+        switch(answers.options){
+            case 'title':
+                inquirer
+                    .prompt([{
+                        type: 'input',
+                        name: 'roleTitle',
+                        message: 'What type of role is it?'
+                    }])
+                    .then((answer) =>  {
+                        results = db.createRole(answers.title);
+                        console.log(`successfully created role ${results}`)
+                    })
+                break;
+            case 'salary':
+                inquirer
+                    .prompt([{
+                        type: 'input',
+                        name: 'salary',
+                        message: 'What is the role\'s salary?'
+                    }])
+                    .then((answer) =>  {
+                        results = db.createRole(answers.title);
+                        console.log(`successfully created role ${results}`)
+                    })
+                break;
+            case 'title':
+                inquirer
+                    .prompt([{
+                        type: 'input',
+                        name: 'departmentId',
+                        message: 'What is the id of the department this role belongs to?'
+                    }])
+                    .then((answer) =>  {
+                        results = db.createRole(answers.title);
+                        console.log(`successfully created role ${results}`)
+                    })
+                break;
+        }
+        console.table(results);
+    })
+    .catch((error) => {
+        if (error.isTtyError) {
+            // Prompt couldn't be rendered in the current environment
+        } else {
+            // Something else went wrong
+            console.log("Sorry something went wrong :( ")
+            console.log(error)
+        }
+    })   
 }
 
 
